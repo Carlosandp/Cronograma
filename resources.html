@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Biblioteca completa de recursos para el programa de optimización cuántica">
+    <title>Biblioteca de Recursos | Optimización Cuántica</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #7c3aed;
+            --accent-color: #0891b2;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .search-input {
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-color: transparent;
+            color: white;
+        }
+
+        /* Resource Categories */
+        .category-section {
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+        }
+
+        .category-title {
+            flex: 1;
+        }
+
+        .category-title h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .category-count {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Resource Grid */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: left 0.5s ease;
+        }
+
+        .resource-card:hover::before {
+            left: 0;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: var(--primary-color);
+        }
+
+        .resource-type {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .resource-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .resource-description {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+
+        .resource-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .resource-link {
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .resource-link:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Special Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-new {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .badge-important {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .badge-free {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .filter-tabs {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📚 Biblioteca de Recursos</h1>
+            <p class="subtitle">Todo lo que necesitas para dominar la Optimización Cuántica</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="🔍 Buscar recursos..." id="searchInput" onkeyup="filterResources()">
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" onclick="filterByType('all')">📚 Todos</div>
+            <div class="filter-tab" onclick="filterByType('books')">📖 Libros</div>
+            <div class="filter-tab" onclick="filterByType('papers')">📄 Papers</div>
+            <div class="filter-tab" onclick="filterByType('videos')">🎥 Videos</div>
+            <div class="filter-tab" onclick="filterByType('platforms')">💻 Plataformas</div>
+            <div class="filter-tab" onclick="filterByType('tools')">🛠️ Herramientas</div>
+        </div>
+
+        <!-- Books Section -->
+        <div class="category-section" data-type="books">
+            <div class="category-header">
+                <div class="category-icon">📖</div>
+                <div class="category-title">
+                    <h2>Libros de Texto</h2>
+                    <div class="category-count">12 recursos disponibles</div>
+                </div>
+            </div>
+            
+            <div class="resource-grid">
+                <!-- Nielsen & Chuang -->
+                <div class="resource-card">
+                    <span class="resource-type">LIBRO</span>
+                    <span class="badge badge-important">ESENCIAL</span>
+                    <span class="badge badge-free">GRATIS</span>
+                    <h3 class="resource-title">Quantum Computation and Quantum Information</h3>
+                    <p class="resource-description">Nielsen & Chuang - La biblia de la computación cuántica. Cubre todos los fundamentos teóricos y prácticos.</p>
+                    <div class="resource-meta">
+                        <span>📅 2010</span>
+                        <span>📄 715 páginas</span>
+                        <span>⭐ 10/10</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="http://mmrc.amss.cas.cn/tlb/201702/W020170224608149940643.pdf" target="_blank" class="resource-link">
+                            📥 PDF Completo
+                        </a>
+                        <a href="https://www.cambridge.org/core/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE" target="_blank" class="resource-link">
+                            🔗 Cambridge
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Boyd & Vandenberghe -->
+                <div class="resource-card">
+                    <span class="resource-type">LIBRO</span>
+                    <span class="badge badge-important">MES 3</span>
+                    <span class="badge badge-free">GRATIS</span>
+                    <h3 class="resource-title">Convex Optimization</h3>
+                    <p class="resource-description">Boyd & Vandenberghe - Referencia definitiva para optimización convexa, fundamental para algoritmos cuánticos.</p>
+                    <div class="resource-meta">
+                        <span>📅 2004</span>
+                        <span>📄 730 páginas</span>
+                        <span>⭐ 9/10</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf" target="_blank" class="resource-link">
+                            📥 PDF Oficial
+                        </a>
+                        <a href="https://www.cvxpy.org/" target="_blank" class="resource-link">
+                            💻 CVXPY
+                        </a>
+                        <a href="https://web.stanford.edu/class/ee364a/" target="_blank" class="resource-link">
+                            🎓 Curso Stanford
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hidary -->
+                <div class="resource-card">
+                    <span class="resource-type">LIBRO</span>
+                    <span class="badge badge-new">2021</span>
+                    <h3 class="resource-title">Quantum Computing: An Applied Approach</h3>
+                    <p class="resource-description">Jack Hidary - Enfoque práctico con ejemplos de código en Qiskit y Cirq. Ideal para ingenieros.</p>
+                    <div class="resource-meta">
+                        <span>📅 2021</span>
+                        <span>📄 422 páginas</span>
+                        <span>⭐ 8/10</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://link.springer.com/book/10.1007/978-3-030-83274-2" target="_blank" class="resource-link">
+                            📖 Springer
+                        </a>
+                        <a href="https://github.com/JackHidary/quantumcomputingbook" target="_blank" class="resource-link">
+                            💻 GitHub Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Schuld & Petruccione -->
+                <div class="resource-card">
+                    <span class="resource-type">LIBRO</span>
+                    <span class="badge badge-important">MES 4</span>
+                    <h3 class="resource-title">Machine Learning with Quantum Computers</h3>
+                    <p class="resource-description">Schuld & Petruccione - Conecta ML clásico con algoritmos cuánticos. Excelente para VQE y QAOA.</p>
+                    <div class="resource-meta">
+                        <span>📅 2021</span>
+                        <span>📄 512 páginas</span>
+                        <span>⭐ 9/10</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://link.springer.com/book/10.1007/978-3-030-83098-4" target="_blank" class="resource-link">
+                            📖 Springer
+                        </a>
+                        <a href="https://pennylane.ai/qml/" target="_blank" class="resource-link">
+                            🔬 PennyLane QML
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Papers Section -->
+        <div class="category-section" data-type="papers">
+            <div class="category-header">
+                <div class="category-icon">📄</div>
+                <div class="category-title">
+                    <h2>Papers Fundamentales</h2>
+                    <div class="category-count">20+ papers esenciales</div>
+                </div>
+            </div>
+            
+            <div class="resource-grid">
+                <!-- QAOA Paper -->
+                <div class="resource-card">
+                    <span class="resource-type">PAPER</span>
+                    <span class="badge badge-important">LECTURA OBLIGATORIA</span>
+                    <h3 class="resource-title">A Quantum Approximate Optimization Algorithm</h3>
+                    <p class="resource-description">Farhi et al. (2014) - Paper original del QAOA. Introduce el algoritmo más importante para optimización NISQ.</p>
+                    <div class="resource-meta">
+                        <span>👥 Farhi, Goldstone, Gutmann</span>
+                        <span>📅 2014</span>
+                        <span>📄 30 páginas</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://arxiv.org/abs/1411.4028" target="_blank" class="resource-link">
+                            📄 arXiv
+                        </a>
+                        <a href="https://arxiv.org/pdf/1411.4028.pdf" target="_blank" class="resource-link">
+                            📥 PDF
+                        </a>
+                        <a href="https://qiskit.org/documentation/tutorials/algorithms/05_qaoa.html" target="_blank" class="resource-link">
+                            💻 Tutorial
+                        </a>
+                    </div>
+                </div>
+
+                <!-- VQE Paper -->
+                <div class="resource-card">
+                    <span class="resource-type">PAPER</span>
+                    <span class="badge badge-important">LECTURA OBLIGATORIA</span>
+                    <h3 class="resource-title">A variational eigenvalue solver on a photonic quantum processor</h3>
+                    <p class="resource-description">Peruzzo et al. (2014) - Introduce VQE, fundamental para química cuántica y optimización.</p>
+                    <div class="resource-meta">
+                        <span>👥 Peruzzo et al.</span>
+                        <span>📅 2014</span>
+                        <span>📄 10 páginas</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://arxiv.org/abs/1304.3061" target="_blank" class="resource-link">
+                            📄 arXiv
+                        </a>
+                        <a href="https://arxiv.org/pdf/1304.3061.pdf" target="_blank" class="resource-link">
+                            📥 PDF
+                        </a>
+                        <a href="https://qiskit.org/textbook/ch-applications/vqe-molecules.html" target="_blank" class="resource-link">
+                            🧪 Demo H₂
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Preskill NISQ -->
+                <div class="resource-card">
+                    <span class="resource-type">PAPER</span>
+                    <span class="badge badge-important">CONTEXTO NISQ</span>
+                    <h3 class="resource-title">Quantum Computing in the NISQ era and beyond</h3>
+                    <p class="resource-description">Preskill (2018) - Define la era NISQ y las limitaciones actuales de hardware cuántico.</p>
+                    <div class="resource-meta">
+                        <span>👤 John Preskill</span>
+                        <span>📅 2018</span>
+                        <span>📄 22 páginas</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://arxiv.org/abs/1801.00862" target="_blank" class="resource-link">
+                            📄 arXiv
+                        </a>
+                        <a href="https://arxiv.org/pdf/1801.00862.pdf" target="_blank" class="resource-link">
+                            📥 PDF
+                        </a>
+                        <a href="https://quantum-journal.org/papers/q-2018-08-06-79/" target="_blank" class="resource-link">
+                            📖 Quantum Journal
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cerezo Review -->
+                <div class="resource-card">
+                    <span class="resource-type">PAPER</span>
+                    <span class="badge badge-new">2021</span>
+                    <h3 class="resource-title">Variational Quantum Algorithms</h3>
+                    <p class="resource-description">Cerezo et al. (2021) - Review completo de algoritmos variacionales. Estado del arte actual.</p>
+                    <div class="resource-meta">
+                        <span>👥 Cerezo et al.</span>
+                        <span>📅 2021</span>
+                        <span>📄 45 páginas</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://arxiv.org/abs/2012.09265" target="_blank" class="resource-link">
+                            📄 arXiv
+                        </a>
+                        <a href="https://www.nature.com/articles/s42254-021-00348-9" target="_blank" class="resource-link">
+                            📖 Nature Reviews
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos Section -->
+        <div class="category-section" data-type="videos">
+            <div class="category-header">
+                <div class="category-icon">🎥</div>
+                <div class="category-title">
+                    <h2>Cursos en Video</h2>
+                    <div class="category-count">Horas de contenido gratuito</div>
+                </div>
+            </div>
+            
+            <div class="resource-grid">
+                <!-- Qiskit Summer School -->
+                <div class="resource-card">
+                    <span class="resource-type">VIDEO CURSO</span>
+                    <span class="badge badge-free">GRATIS</span>
+                    <h3 class="resource-title">Qiskit Global Summer School 2023</h3>
+                    <p class="resource-description">2 semanas intensivas de quantum computing con labs prácticos y certificado.</p>
+                    <div class="resource-meta">
+                        <span>🎓 IBM</span>
+                        <span>⏱️ 40+ horas</span>
+                        <span>📜 Certificado</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/playlist?list=PLOFEBzvs-VvqKKMXX4vbi4EB1uaErFMSO" target="_blank" class="resource-link">
+                            ▶️ YouTube
+                        </a>
+                        <a href="https://github.com/qiskit-community/qiskit-textbook" target="_blank" class="resource-link">
+                            💻 Labs
+                        </a>
+                    </div>
+                </div>
+
+                <!-- MIT OCW -->
+                <div class="resource-card">
+                    <span class="resource-type">VIDEO CURSO</span>
+                    <span class="badge badge-free">MIT OCW</span>
+                    <h3 class="resource-title">MIT 8.06 Quantum Physics III</h3>
+                    <p class="resource-description">Curso completo del MIT sobre mecánica cuántica avanzada con aplicaciones computacionales.</p>
+                    <div class="resource-meta">
+                        <span>🎓 MIT</span>
+                        <span>⏱️ 24 lectures</span>
+                        <span>📝 Problem Sets</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://ocw.mit.edu/courses/8-06-quantum-physics-iii-spring-2018/" target="_blank" class="resource-link">
+                            🎓 MIT OCW
+                        </a>
+                        <a href="https://www.youtube.com/playlist?list=PLUl4u3cNGP60Zcz8LnCDFI8RPqRhJbb4L" target="_blank" class="resource-link">
+                            ▶️ Videos
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PennyLane Demos -->
+                <div class="resource-card">
+                    <span class="resource-type">TUTORIALES</span>
+                    <span class="badge badge-new">ACTUALIZADO</span>
+                    <h3 class="resource-title">PennyLane QML Demos</h3>
+                    <p class="resource-description">Demos interactivos de quantum machine learning con código ejecutable.</p>
+                    <div class="resource-meta">
+                        <span>🏢 Xanadu</span>
+                        <span>💻 50+ demos</span>
+                        <span>🔄 Actualizado</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://pennylane.ai/qml/demonstrations.html" target="_blank" class="resource-link">
+                            🔬 Demos
+                        </a>
+                        <a href="https://www.youtube.com/c/XanaduAI" target="_blank" class="resource-link">
+                            ▶️ YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platforms Section -->
+        <div class="category-section" data-type="platforms">
+            <div class="category-header">
+                <div class="category-icon">💻</div>
+                <div class="category-title">
+                    <h2>Plataformas de Práctica</h2>
+                    <div class="category-count">Acceso a hardware cuántico real</div>
+                </div>
+            </div>
+            
+            <div class="resource-grid">
+                <!-- IBM Quantum -->
+                <div class="resource-card">
+                    <span class="resource-type">PLATAFORMA</span>
+                    <span class="badge badge-free">GRATIS</span>
+                    <h3 class="resource-title">IBM Quantum Experience</h3>
+                    <p class="resource-description">Acceso gratuito a computadoras cuánticas reales de hasta 127 qubits. Incluye simuladores y composer visual.</p>
+                    <div class="resource-meta">
+                        <span>🏢 IBM</span>
+                        <span>🔬 Hardware real</span>
+                        <span>⚡ 127 qubits</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://quantum-computing.ibm.com/" target="_blank" class="resource-link">
+                            🚀 Acceder
+                        </a>
+                        <a href="https://qiskit.org/" target="_blank" class="resource-link">
+                            📚 Qiskit
+                        </a>
+                        <a href="https://quantum-computing.ibm.com/composer" target="_blank" class="resource-link">
+                            🎨 Composer
+                        </a>
+                    </div>
+                </div>
+
+                <!-- D-Wave Leap -->
+                <div class="resource-card">
+                    <span class="resource-type">PLATAFORMA</span>
+                    <span class="badge badge-important">ANNEALING</span>
+                    <h3 class="resource-title">D-Wave Leap</h3>
+                    <p class="resource-description">Quantum annealing con hasta 5000+ qubits. 1 minuto gratis/mes en QPU real.</p>
+                    <div class="resource-meta">
+                        <span>🏢 D-Wave</span>
+                        <span>🔬 Advantage 2</span>
+                        <span>⚡ 5000+ qubits</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://cloud.dwavesys.com/leap/" target="_blank" class="resource-link">
+                            🚀 Leap Cloud
+                        </a>
+                        <a href="https://ocean.dwavesys.com/" target="_blank" class="resource-link">
+                            🌊 Ocean SDK
+                        </a>
+                        <a href="https://github.com/dwavesystems" target="_blank" class="resource-link">
+                            💻 GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Amazon Braket -->
+                <div class="resource-card">
+                    <span class="resource-type">PLATAFORMA</span>
+                    <span class="badge badge-new">MULTI-VENDOR</span>
+                    <h3 class="resource-title">Amazon Braket</h3>
+                    <p class="resource-description">Acceso unificado a hardware de IBM, Rigetti, IonQ y D-Wave. Créditos educacionales disponibles.</p>
+                    <div class="resource-meta">
+                        <span>🏢 AWS</span>
+                        <span>🔬 Multi-hardware</span>
+                        <span>💰 Pay-per-use</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://aws.amazon.com/braket/" target="_blank" class="resource-link">
+                            ☁️ AWS Braket
+                        </a>
+                        <a href="https://github.com/aws/amazon-braket-examples" target="_blank" class="resource-link">
+                            💻 Ejemplos
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Google Cirq -->
+                <div class="resource-card">
+                    <span class="resource-type">FRAMEWORK</span>
+                    <span class="badge badge-free">OPEN SOURCE</span>
+                    <h3 class="resource-title">Google Cirq</h3>
+                    <p class="resource-description">Framework de Google para algoritmos NISQ. Excelente para investigación y simulación.</p>
+                    <div class="resource-meta">
+                        <span>🏢 Google</span>
+                        <span>🐍 Python</span>
+                        <span>📖 Open Source</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://quantumai.google/cirq" target="_blank" class="resource-link">
+                            🔬 Cirq
+                        </a>
+                        <a href="https://quantumai.google/cirq/tutorials" target="_blank" class="resource-link">
+                            📚 Tutoriales
+                        </a>
+                        <a href="https://github.com/quantumlib/Cirq" target="_blank" class="resource-link">
+                            💻 GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <div class="category-section" data-type="tools">
+            <div class="category-header">
+                <div class="category-icon">🛠️</div>
+                <div class="category-title">
+                    <h2>Herramientas y Software</h2>
+                    <div class="category-count">Frameworks y utilidades</div>
+                </div>
+            </div>
+            
+            <div class="resource-grid">
+                <!-- Jupyter Notebooks -->
+                <div class="resource-card">
+                    <span class="resource-type">HERRAMIENTA</span>
+                    <span class="badge badge-free">ESENCIAL</span>
+                    <h3 class="resource-title">Jupyter Lab</h3>
+                    <p class="resource-description">Entorno de desarrollo interactivo para Python. Esencial para todos los notebooks del curso.</p>
+                    <div class="resource-meta">
+                        <span>🐍 Python</span>
+                        <span>📓 Notebooks</span>
+                        <span>🎨 Interactivo</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://jupyter.org/install" target="_blank" class="resource-link">
+                            💻 Instalar
+                        </a>
+                        <a href="https://colab.research.google.com/" target="_blank" class="resource-link">
+                            ☁️ Google Colab
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Qiskit Textbook -->
+                <div class="resource-card">
+                    <span class="resource-type">RECURSO</span>
+                    <span class="badge badge-free">INTERACTIVO</span>
+                    <h3 class="resource-title">Qiskit Textbook</h3>
+                    <p class="resource-description">Libro interactivo con código ejecutable. Cubre desde básicos hasta algoritmos avanzados.</p>
+                    <div class="resource-meta">
+                        <span>📚 Completo</span>
+                        <span>💻 Código</span>
+                        <span>🔄 Actualizado</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://qiskit.org/textbook/" target="_blank" class="resource-link">
+                            📖 Textbook
+                        </a>
+                        <a href="https://github.com/qiskit-community/qiskit-textbook" target="_blank" class="resource-link">
+                            💻 GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- QuTiP -->
+                <div class="resource-card">
+                    <span class="resource-type">LIBRERÍA</span>
+                    <span class="badge badge-free">SIMULACIÓN</span>
+                    <h3 class="resource-title">QuTiP</h3>
+                    <p class="resource-description">Quantum Toolbox in Python. Excelente para simulación de sistemas cuánticos abiertos.</p>
+                    <div class="resource-meta">
+                        <span>🐍 Python</span>
+                        <span>📊 Visualización</span>
+                        <span>🔬 Investigación</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://qutip.org/" target="_blank" class="resource-link">
+                            🏠 QuTiP
+                        </a>
+                        <a href="https://qutip.org/docs/latest/guide/guide.html" target="_blank" class="resource-link">
+                            📚 Docs
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quantum Computing Report -->
+                <div class="resource-card">
+                    <span class="resource-type">NOTICIAS</span>
+                    <span class="badge badge-new">ACTUALIDAD</span>
+                    <h3 class="resource-title">Quantum Computing Report</h3>
+                    <p class="resource-description">Noticias actualizadas sobre avances en hardware, software y aplicaciones cuánticas.</p>
+                    <div class="resource-meta">
+                        <span>📰 Noticias</span>
+                        <span>📊 Análisis</span>
+                        <span>🔄 Diario</span>
+                    </div>
+                    <div class="resource-links">
+                        <a href="https://quantumcomputingreport.com/" target="_blank" class="resource-link">
+                            📰 QC Report
+                        </a>
+                        <a href="https://arxiv.org/list/quant-ph/recent" target="_blank" class="resource-link">
+                            📄 arXiv Daily
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference Section -->
+        <div class="category-section">
+            <div class="category-header">
+                <div class="category-icon">⚡</div>
+                <div class="category-title">
+                    <h2>Referencias Rápidas</h2>
+                    <div class="category-count">Comandos y snippets útiles</div>
+                </div>
+            </div>
+            
+            <div class="resource-grid">
+                <!-- Installation Commands -->
+                <div class="resource-card">
+                    <span class="resource-type">CÓDIGO</span>
+                    <h3 class="resource-title">Comandos de Instalación</h3>
+                    <p class="resource-description">Setup rápido del ambiente de desarrollo:</p>
+                    <pre style="background: var(--dark-bg); padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;">
+# Crear ambiente virtual
+python -m venv quantum_env
+source quantum_env/bin/activate
+
+# Instalar librerías principales
+pip install qiskit qiskit-optimization
+pip install pennylane
+pip install dwave-ocean-sdk
+pip install cirq
+pip install jupyter matplotlib numpy</pre>
+                </div>
+
+                <!-- Quick Qiskit Example -->
+                <div class="resource-card">
+                    <span class="resource-type">CÓDIGO</span>
+                    <h3 class="resource-title">Hello Quantum World</h3>
+                    <p class="resource-description">Primer circuito cuántico en Qiskit:</p>
+                    <pre style="background: var(--dark-bg); padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;">
+from qiskit import QuantumCircuit
+from qiskit.visualization import plot_histogram
+from qiskit_aer import AerSimulator
+
+# Crear circuito Bell State
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure_all()
+
+# Simular
+sim = AerSimulator()
+result = sim.run(qc, shots=1000).result()
+plot_histogram(result.get_counts())</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to main button -->
+    <a href="index.html" class="back-btn">
+        ← Volver al Cronograma
+    </a>
+
+    <script>
+        // Filter resources by type
+        function filterByType(type) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide categories
+            const sections = document.querySelectorAll('.category-section');
+            sections.forEach(section => {
+                if (type === 'all' || section.dataset.type === type) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
+        // Search functionality
+        function filterResources() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.resource-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add copy functionality to code blocks
+        document.querySelectorAll('pre').forEach(block => {
+            block.style.position = 'relative';
+            block.style.cursor = 'pointer';
+            block.title = 'Click para copiar';
+            
+            block.addEventListener('click', function() {
+                const text = this.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    // Visual feedback
+                    const original = this.style.background;
+                    this.style.background = '#10b981';
+                    setTimeout(() => {
+                        this.style.background = original;
+                    }, 200);
+                });
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.resource-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + K to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            
+            // Escape to clear search
+            if (e.key === 'Escape') {
+                document.getElementById('searchInput').value = '';
+                filterResources();
+            }
+        });
+    </script>
+</body>
+</html>

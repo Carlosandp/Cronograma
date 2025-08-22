@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Progreso | Optimización Cuántica</title>
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #7c3aed;
+            --accent-color: #0891b2;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .progress-timeline {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .timeline-month {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .month-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+            z-index: 2;
+        }
+
+        .month-content {
+            flex: 1;
+        }
+
+        .month-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .week-progress {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .week-box {
+            width: 30px;
+            height: 30px;
+            background: var(--dark-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .week-box.completed {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .week-box:hover {
+            transform: scale(1.1);
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 25px;
+            top: 60px;
+            bottom: -25px;
+            width: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-bg);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Achievement badges */
+        .achievements {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--warning-color), var(--danger-color));
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .badge.locked {
+            background: var(--dark-bg);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard de Progreso</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Programa de Optimización Cuántica</p>
+        </div>
+
+        <!-- Statistics Grid -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--primary-color);" id="totalProgress">0%</div>
+                <div class="stat-label">Progreso Total</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--success-color);" id="weeksCompleted">0/16</div>
+                <div class="stat-label">Semanas Completadas</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--accent-color);" id="hoursStudied">0h</div>
+                <div class="stat-label">Horas de Estudio</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--warning-color);" id="currentStreak">0</div>
+                <div class="stat-label">Racha Actual (días)</div>
+            </div>
+        </div>
+
+        <!-- Progress Chart -->
+        <div class="chart-container">
+            <h2 style="margin-bottom: 20px; color: var(--primary-color);">📈 Progreso por Mes</h2>
+            <canvas id="progressChart"></canvas>
+        </div>
+
+        <!-- Timeline Progress -->
+        <div class="progress-timeline">
+            <h2 style="margin-bottom: 30px; color: var(--primary-color);">🗓️ Línea de Tiempo</h2>
+            
+            <!-- Mes 1 -->
+            <div class="timeline-month">
+                <div class="month-icon">🎯</div>
+                <div class="month-content">
+                    <div class="month-title">Mes 1: Mecánica Analítica</div>
+                    <div class="week-progress">
+                        <div class="week-box" data-week="1" onclick="toggleWeek(this)" title="Semana 1: Lagrangiano"></div>
+                        <div class="week-box" data-week="2" onclick="toggleWeek(this)" title="Semana 2: Hamiltoniano"></div>
+                        <div class="week-box" data-week="3" onclick="toggleWeek(this)" title="Semana 3: Simetrías"></div>
+                        <div class="week-box" data-week="4" onclick="toggleWeek(this)" title="Semana 4: Hilbert"></div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Mes 2 -->
+            <div class="timeline-month">
+                <div class="month-icon">🔬</div>
+                <div class="month-content">
+                    <div class="month-title">Mes 2: Mecánica Cuántica Computacional</div>
+                    <div class="week-progress">
+                        <div class="week-box" data-week="5" onclick="toggleWeek(this)" title="Semana 5: Qubits"></div>
+                        <div class="week-box" data-week="6" onclick="toggleWeek(this)" title="Semana 6: Puertas"></div>
+                        <div class="week-box" data-week="7" onclick="toggleWeek(this)" title="Semana 7: Entrelazamiento"></div>
+                        <div class="week-box" data-week="8" onclick="toggleWeek(this)" title="Semana 8: Medición"></div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Mes 3 -->
+            <div class="timeline-month">
+                <div class="month-icon">📊</div>
+                <div class="month-content">
+                    <div class="month-title">Mes 3: Optimización y Estadística</div>
+                    <div class="week-progress">
+                        <div class="week-box" data-week="9" onclick="toggleWeek(this)" title="Semana 9: Optimización Clásica"></div>
+                        <div class="week-box" data-week="10" onclick="toggleWeek(this)" title="Semana 10: Estocástica"></div>
+                        <div class="week-box" data-week="11" onclick="toggleWeek(this)" title="Semana 11: Monte Carlo"></div>
+                        <div class="week-box" data-week="12" onclick="toggleWeek(this)" title="Semana 12: ML"></div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Mes 4 -->
+            <div class="timeline-month">
+                <div class="month-icon">🚀</div>
+                <div class="month-content">
+                    <div class="month-title">Mes 4: Algoritmos Cuánticos de Optimización</div>
+                    <div class="week-progress">
+                        <div class="week-box" data-week="13" onclick="toggleWeek(this)" title="Semana 13: QAOA"></div>
+                        <div class="week-box" data-week="14" onclick="toggleWeek(this)" title="Semana 14: VQE"></div>
+                        <div class="week-box" data-week="15" onclick="toggleWeek(this)" title="Semana 15: Annealing"></div>
+                        <div class="week-box" data-week="16" onclick="toggleWeek(this)" title="Semana 16: Proyecto Final"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="chart-container">
+            <h2 style="margin-bottom: 20px; color: var(--primary-color);">🏆 Logros</h2>
+            <div class="achievements">
+                <div class="badge" id="badge1">🎯 Primer Mes</div>
+                <div class="badge locked" id="badge2">🔬 Experto Cuántico</div>
+                <div class="badge locked" id="badge3">📊 Maestro Optimizador</div>
+                <div class="badge locked" id="badge4">🚀 Algoritmos Avanzados</div>
+                <div class="badge locked" id="badge5">🏆 Programa Completo</div>
+                <div class="badge locked" id="badge6">⚡ Racha 7 días</div>
+                <div class="badge locked" id="badge7">🔥 Racha 30 días</div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <a href="index.html" class="btn">← Volver al Cronograma</a>
+            <button class="btn btn-secondary" onclick="exportData()">📥 Exportar Datos</button>
+            <button class="btn btn-secondary" onclick="resetProgress()">🔄 Reiniciar</button>
+            <button class="btn" onclick="generateCertificate()">📜 Generar Certificado</button>
+        </div>
+    </div>
+
+    <script>
+        // Load saved progress
+        let progress = JSON.parse(localStorage.getItem('quantumProgressData')) || {};
+        
+        // Initialize progress tracking
+        function initializeProgress() {
+            // Load saved week states
+            document.querySelectorAll('.week-box').forEach(box => {
+                const week = box.dataset.week;
+                if (progress[`week${week}`]) {
+                    box.classList.add('completed');
+                }
+            });
+            
+            updateStatistics();
+            updateChart();
+            updateAchievements();
+        }
+
+        // Toggle week completion
+        function toggleWeek(element) {
+            const week = element.dataset.week;
+            element.classList.toggle('completed');
+            progress[`week${week}`] = element.classList.contains('completed');
+            
+            // Save to localStorage
+            localStorage.setItem('quantumProgressData', JSON.stringify(progress));
+            
+            // Update displays
+            updateStatistics();
+            updateChart();
+            updateAchievements();
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const completed = document.querySelectorAll('.week-box.completed').length;
+            const total = 16;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('totalProgress').textContent = percentage + '%';
+            document.getElementById('weeksCompleted').textContent = completed + '/' + total;
+            document.getElementById('hoursStudied').textContent = (completed * 4) + 'h';
+            
+            // Calculate streak (simplified)
+            const today = new Date().toDateString();
+            if (progress.lastActive !== today && completed > 0) {
+                progress.streak = (progress.streak || 0) + 1;
+                progress.lastActive = today;
+            }
+            document.getElementById('currentStreak').textContent = progress.streak || 0;
+        }
+
+        // Create progress chart
+        function updateChart() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            
+            const monthProgress = [
+                document.querySelectorAll('.timeline-month:nth-child(1) .week-box.completed').length * 25,
+                document.querySelectorAll('.timeline-month:nth-child(2) .week-box.completed').length * 25,
+                document.querySelectorAll('.timeline-month:nth-child(3) .week-box.completed').length * 25,
+                document.querySelectorAll('.timeline-month:nth-child(4) .week-box.completed').length * 25
+            ];
+
+            if (window.progressChart) {
+                window.progressChart.destroy();
+            }
+
+            window.progressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mes 1: Mecánica', 'Mes 2: Cuántica', 'Mes 3: Optimización', 'Mes 4: Algoritmos'],
+                    datasets: [{
+                        label: 'Progreso (%)',
+                        data: monthProgress,
+                        backgroundColor: [
+                            'rgba(37, 99, 235, 0.8)',
+                            'rgba(124, 58, 237, 0.8)',
+                            'rgba(8, 145, 178, 0.8)',
+                            'rgba(16, 185, 129, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(37, 99, 235, 1)',
+                            'rgba(124, 58, 237, 1)',
+                            'rgba(8, 145, 178, 1)',
+                            'rgba(16, 185, 129, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                color: '#94a3b8'
+                            },
+                            grid: {
+                                color: '#334155'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#94a3b8'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update achievements
+        function updateAchievements() {
+            const completed = document.querySelectorAll('.week-box.completed').length;
+            
+            // Unlock achievements based on progress
+            if (completed >= 4) document.getElementById('badge1').classList.remove('locked');
+            if (completed >= 8) document.getElementById('badge2').classList.remove('locked');
+            if (completed >= 12) document.getElementById('badge3').classList.remove('locked');
+            if (completed >= 15) document.getElementById('badge4').classList.remove('locked');
+            if (completed === 16) {
+                document.getElementById('badge5').classList.remove('locked');
+                document.getElementById('badge5').classList.add('pulse');
+            }
+            if (progress.streak >= 7) document.getElementById('badge6').classList.remove('locked');
+            if (progress.streak >= 30) document.getElementById('badge7').classList.remove('locked');
+        }
+
+        // Export progress data
+        function exportData() {
+            const data = {
+                date: new Date().toISOString(),
+                progress: progress,
+                statistics: {
+                    totalProgress: document.getElementById('totalProgress').textContent,
+                    weeksCompleted: document.getElementById('weeksCompleted').textContent,
+                    hoursStudied: document.getElementById('hoursStudied').textContent,
+                    streak: document.getElementById('currentStreak').textContent
+                }
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', dataUri);
+            link.setAttribute('download', 'quantum_progress_' + new Date().toISOString().split('T')[0] + '.json');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Reset progress
+        function resetProgress() {
+            if (confirm('¿Estás seguro de que quieres reiniciar todo el progreso?')) {
+                localStorage.removeItem('quantumProgressData');
+                progress = {};
+                location.reload();
+            }
+        }
+
+        // Generate certificate
+        function generateCertificate() {
+            const completed = document.querySelectorAll('.week-box.completed').length;
+            if (completed < 16) {
+                alert('Debes completar todas las 16 semanas para generar el certificado.');
+                return;
+            }
+            
+            // Open certificate generator (placeholder)
+            alert('¡Felicitaciones! Has completado el programa. El certificado se generará pronto.');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initializeProgress);
+    </script>
+</body>
+</html>

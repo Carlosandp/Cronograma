@@ -1,0 +1,54 @@
+# GitHub Pages Configuration
+theme: jekyll-theme-minimal
+title: Programa de Optimización Cuántica
+description: Cronograma de 4 meses para dominar algoritmos cuánticos de optimización
+show_downloads: true
+google_analytics: # Add your GA tracking ID here
+
+# Social links
+github_username: Carlosandp
+twitter_username: # Add if available
+linkedin_username: # Add if available
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Exclude files from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - notebooks/
+  - .gitignore
+  - LICENSE
+  - README.md
+
+# Include specific files
+include:
+  - index.html
+  - progress.html
+  - resources.html
+  - assets/
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# SEO settings
+url: "https://carlosandp.github.io"
+baseurl: "/Cronograma.github.io"
+lang: "es"
+
+# Default meta tags
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/quantum-og-image.png
+      author: "Carlos A."
